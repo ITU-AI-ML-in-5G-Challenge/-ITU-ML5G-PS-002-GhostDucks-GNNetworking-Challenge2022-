@@ -1,0 +1,19 @@
+# bias according to bw statistics
+type: WeightedChoice
+weights: [0.30, 0.38, 0.20, 0.09, 0.03]
+vals:
+  - type: IntRangeChoice
+    a: 10
+    b: 800
+  - type: IntRangeChoice
+    a: 800
+    b: 1800
+  - type: IntRangeChoice
+    a: 1800
+    b: 2700
+  - type: IntRangeChoice
+    a: 2700
+    b: 4500
+  - type: IntRangeChoice
+    a: 4500
+    b: 10000

@@ -1,0 +1,85 @@
+---
+defaults:
+  - hydra
+  - _self_
+
+num_topologies: 5
+num_tm_per_topology: 20
+datasets_root: ./datasets
+ds_name: quickstart
+save_path: .
+
+topology:
+  graph_creator:
+    type: node_degree
+    node_degree:
+      type: WeightedChoice
+      vals:
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+      weights:
+        - 0.34
+        - 0.35
+        - 0.2
+        - 0.1
+        - 0.01
+  node_scheduling_policy:
+    type: Const
+    value: 'FIFO'
+  node_buffer_size:
+    type: Const
+    value: 32000
+  link_bandwidth:
+    type: Const
+    value: 100000
+
+routing:
+  type: shortest_path
+
+traffic:
+  bandwidth:
+    type: IntRangeChoice
+    a: 10
+    b: 1000
+
+  tos:
+    type: WeightedChoice
+    vals:
+      - 0
+      - 1
+      - 2
+
+  time_dist:
+    type: WeightedChoice
+    vals:
+      - 0
+      - 1
+      - 2
+  td_on:
+    type: Const
+    value: 10
+  td_off:
+    type: Const
+    value: 5
+
+  packet_dist:
+    type: WeightedChoice
+    vals:
+      - sizes:
+          - 300
+          - 1700
+        probs:
+          - 0.5
+          - 0.5
+      - sizes:
+          - 500
+          - 1000
+          - 1400
+        probs:
+          - 0.6
+          - 0.2
+          - 0.2
+

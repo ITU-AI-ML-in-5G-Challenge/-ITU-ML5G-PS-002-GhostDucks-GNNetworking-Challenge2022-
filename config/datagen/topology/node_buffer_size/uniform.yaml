@@ -1,0 +1,2 @@
+type: WeightedChoice
+vals: [8000, 16000, 32000, 64000]

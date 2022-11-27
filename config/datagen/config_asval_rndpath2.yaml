@@ -1,0 +1,164 @@
+---
+defaults:
+  - hydra
+  - _self_
+
+num_topologies: 5
+num_tm_per_topology: 20
+datasets_root: ./datasets
+ds_name: asval
+save_path: .
+
+topology:
+  net_size: 10
+  graph_creator:
+    type: erdos_renyi
+    p:
+      type: WeightedChoice
+      vals: [0.1, 0.2, 0.3, 0.4]
+
+  node_scheduling_policy:
+    type: WeightedChoice
+    vals: [ 'FIFO', 'SP', 'WFQ', 'DRR' ]
+
+  wfq_weights:
+    type: WeightedChoice
+    vals: [
+        [33.3, 33.3, 33.4],
+        [60.0, 30.0, 10.0],
+        [65.0, 25.0, 10.0],
+        [70.0, 20.0, 10.0],
+        [80.0, 10.0, 10.0],
+    ]
+
+  drr_weights:
+    type: WeightedChoice
+    vals: [
+        [33.3, 33.3, 33.4],
+        [50.0, 40.0, 10.0],
+        [60.0, 30.0, 10.0],
+        [70.0, 25.0, 5.0],
+        [90.0, 5.0, 5.0],
+    ]
+
+  node_buffer_size:
+    type: WeightedChoice
+    vals: [8000, 16000, 32000, 64000]
+
+  link_bandwidth:
+    # todo: add noise
+    type: WeightedChoice
+    vals: [10000, 25000, 40000, 100000, 250000, 400000]
+    weights: [0.05, 0.357, 0.363, 0.2, 0.02, 0.01]
+
+# uniform
+#    type: IntRangeChoice
+#    a: 10000
+#    b: 400000
+#    step: 10000
+
+# by global stats but with some pertrubations around the values
+#  link_bandwidth:
+#    type: WeightedChoice
+#    weights: [0.015, 0.075, 0.27, 0.64]
+#    vals:
+#      - type: IntRangeChoice
+#        a: 10000
+#        b: 50000
+#        step: 5000
+#      - type: IntRangeChoice
+#        a: 80000
+#        b: 120000
+#        step: 10000
+#      - type: IntRangeChoice
+#        a: 230000
+#        b: 270000
+#        step: 10000
+#      - type: IntRangeChoice
+#        a: 380000
+#        b: 400000
+#        step: 10000
+
+# strictly global stats
+#    vals: [10000, 25000, 40000, 100000, 250000, 400000]
+#    weights: [0.001, 0.002, 0.008, 0.084, 0.272, 0.633]
+
+routing:
+  type: RandomPathRouting
+  path_sampler: by_length   # uniform
+
+traffic:
+  bandwidth:
+    # bias according to bw statistics
+    type: WeightedChoice
+#    weights: [0.53, 0.26, 0.12, 0.07, 0.02]
+    vals:
+      - type: IntRangeChoice
+        a: 10
+        b: 800
+      - type: IntRangeChoice
+        a: 800
+        b: 1800
+      - type: IntRangeChoice
+        a: 1800
+        b: 2700
+      - type: IntRangeChoice
+        a: 2700
+        b: 4500
+      - type: IntRangeChoice
+        a: 4500
+        b: 10000
+
+    # random
+#    type: IntRangeChoice
+#    a: 100
+#    b: 10000
+#    step: 300
+
+  tos:
+    type: WeightedChoice
+    vals: [0, 1, 2]
+    weights: [0.1, 0.3, 0.6]
+
+  time_dist:
+    type: WeightedChoice
+    vals: [0, 1, 2]
+
+  td_on:
+    type: WeightedChoice
+    vals: [5,4,6]
+    weights: [0.9,0.05,0.05]
+  td_off:
+    type: WeightedChoice
+    vals: [5,4,6]
+    weights: [0.9,0.05,0.05]
+
+  packet_dist:
+    type: WeightedChoice
+    vals:
+      - probs: [0.53, 0.16, 0.07, 0.1, 0.14]
+        sizes: [500, 750, 1000, 1250, 1500]
+      - probs: [0.05, 0.28, 0.25, 0.27, 0.15]
+        sizes: [500, 750, 1000, 1250, 1500]
+      - probs: [0.22, 0.05, 0.06, 0.62, 0.05]
+        sizes: [500, 750, 1000, 1250, 1500]
+      - probs: [0.1, 0.16, 0.36, 0.24, 0.14]
+        sizes: [500, 750, 1000, 1250, 1500]
+      - probs: [0.08, 0.16, 0.35, 0.21, 0.2]
+        sizes: [500, 750, 1000, 1250, 1500]
+#
+#    PktSizeDist:
+#      sizes: [500, 750, 1000, 1250, 1500]
+#      probs:
+#        type: WeightedChoice
+#        vals:
+#          - [0.53, 0.16, 0.07, 0.1, 0.14]
+#          - [0.05, 0.28, 0.25, 0.27, 0.15]
+#          - [0.22, 0.05, 0.06, 0.62, 0.05]
+#          - [0.1, 0.16, 0.36, 0.24, 0.14]
+#          - [0.08, 0.16, 0.35, 0.21, 0.2]
+
+docker:
+  threads: 6
+  samples_per_file: 1
+  rm_prev_results: n

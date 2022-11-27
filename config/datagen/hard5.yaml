@@ -1,0 +1,74 @@
+---
+defaults:
+  - hydra
+  - _self_
+  - topology/link_bandwidth: 25k-40k
+  - topology/node_buffer_size: uniform
+  - traffic/bandwidth: asval
+  - traffic/packet_dist: asval
+
+num_topologies: 5
+num_tm_per_topology: 20
+datasets_root: ./datasets
+ds_name: asval
+save_path: .
+
+topology:
+  net_size: 10
+  graph_creator:
+    type: erdos_renyi
+    p:
+      type: WeightedChoice
+      vals: [0.1, 0.2, 0.3, 0.4]
+
+  node_scheduling_policy:
+    type: WeightedChoice
+    vals: [ 'FIFO', 'SP', 'WFQ', 'DRR' ]
+
+  wfq_weights:
+    type: WeightedChoice
+    vals: [
+        [33.3, 33.3, 33.4],
+        [60.0, 30.0, 10.0],
+        [65.0, 25.0, 10.0],
+        [70.0, 20.0, 10.0],
+        [80.0, 10.0, 10.0],
+    ]
+
+  drr_weights:
+    type: WeightedChoice
+    vals: [
+        [33.3, 33.3, 33.4],
+        [50.0, 40.0, 10.0],
+        [60.0, 30.0, 10.0],
+        [70.0, 25.0, 5.0],
+        [90.0, 5.0, 5.0],
+    ]
+
+routing:
+  type: RandomPathRouting
+  path_sampler: uniform
+
+traffic:
+  tos:
+    type: WeightedChoice
+    vals: [0, 1, 2]
+    weights: [0.1, 0.3, 0.6]
+
+  time_dist:
+    type: WeightedChoice
+    vals: [0, 1, 2]
+
+  td_on:
+    type: WeightedChoice
+    vals: [5,5,5]
+    weights: [0.9,0.05,0.05]
+  td_off:
+    type: WeightedChoice
+    vals: [5,5,5]
+    weights: [0.9,0.05,0.05]
+
+docker:
+  threads: 6
+  samples_per_file: 1
+  rm_prev_results: n

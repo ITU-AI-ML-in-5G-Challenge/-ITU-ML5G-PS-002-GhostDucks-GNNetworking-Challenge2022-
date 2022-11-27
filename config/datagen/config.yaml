@@ -1,0 +1,85 @@
+---
+defaults:
+  - hydra
+  - _self_
+#  - topology/graph_creator: erdos_renyi_const_p
+
+num_topologies: 5
+num_tm_per_topology: 20
+datasets_root: ./datasets
+ds_name: random
+save_path: .
+
+topology:
+  net_size: 6
+  graph_creator:
+    type: erdos_renyi
+    p: 0.1
+
+  node_scheduling_policy:
+    type: WeightedChoice
+    vals: [ 'FIFO', 'SP', 'WFQ', 'DRR' ]
+
+  wfq_weights:
+    type: RandomPct
+    n: 3
+
+  drr_weights:
+    type: RandomPct
+    n: 3
+
+  node_buffer_size:
+    type: IntRangeChoice
+    a: 8000
+    b: 64000
+    step: 1000
+
+  link_bandwidth:
+    type: IntRangeChoice
+    a: 10000
+    b: 400000
+    step: 1000
+
+routing:
+  type: shortest_path
+
+traffic:
+  bandwidth:
+    type: IntRangeChoice
+    a: 10
+    b: 10000
+    step: 50
+
+  tos:
+    type: WeightedChoice
+    vals:
+      - 0
+      - 1
+      - 2
+
+  time_dist:
+    type: WeightedChoice
+    vals:
+      - 0
+      - 1
+      - 2
+  td_on:
+    type: IntRangeChoice
+    a: 1
+    b: 20
+  td_off:
+    type: IntRangeChoice
+    a: 1
+    b: 20
+
+  packet_dist:
+    type: RandomPktSizeDist
+    min_size: 256
+    max_size: 2000
+    min_peaks: 1
+    max_peaks: 3
+
+docker:
+  threads: 6
+  samples_per_file: 10
+  rm_prev_results: n

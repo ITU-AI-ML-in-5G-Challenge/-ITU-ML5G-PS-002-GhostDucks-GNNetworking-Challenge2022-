@@ -1,0 +1,2 @@
+type: ShortestPathRouting
+weights: bandwidth

@@ -1,0 +1,7 @@
+hydra:
+  run:
+    dir: ${datasets_root}/${ds_name}
+  sweep:
+    # output save dir format for multirun tasks
+    dir: ${datasets_root}
+    subdir: ${now:%Y-%m-%d}__${now:%H-%M-%S}__${ds_name}_${hydra.job.num}
